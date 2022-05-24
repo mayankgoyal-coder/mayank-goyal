@@ -22,6 +22,7 @@ FEATURE I - User
 Models
 
 User Model
+
 { 
   fname: {string, mandatory},
   lname: {string, mandatory},
