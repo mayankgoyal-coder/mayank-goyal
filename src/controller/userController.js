@@ -1,12 +1,9 @@
 const bcrypt = require("bcrypt");
-
 const saltRounds = 10;
-
-const aws = require("../aws-service/aws");
-
+const {uploadFile} = require("../aws-service/aws");
 const userModel = require("../models/userModel");
-
 const { isValidData, isValidRequestBody, isValidEmail, isValidPhone, isValidName, pincodeValid } = require("../validator/validation");
+const jwt = require('jsonwebtoken')
 
 
 
@@ -14,15 +11,11 @@ const userRegister = async function (req, res) {
     try {
 
         let requestBody = req.body;
-
         if (!isValidRequestBody(requestBody)) {
             return res.status(400).send({ status: false, message: "No data provided" });
         }
-
         // Extract all attribute destructure
-        let { fname, lname, email, phone, profileImage, password, address } = requestBody;
-
-
+        let { fname, lname, email, phone, profileImage, password, address } = requestBody; 
         // Validation starts--------------
 
         if (!isValidData(fname)) {
@@ -74,11 +67,10 @@ const userRegister = async function (req, res) {
         if (!(password.length >= 8 && password.length <= 15)) {
             return res.status(400).send({ status: false, msg: "Password should be minimum 8 characters and maximum 15 characters", });
         }
-
         if (!isValidData(address)) {
             return res.status(400).send({ status: false, message: "Address is required." });
         }
-
+        
         if (!isValidData(address.shipping.street)) {
             return res.status(400).send({ status: false, message: "Shipping street is required." });
         }
@@ -117,7 +109,7 @@ const userRegister = async function (req, res) {
         }
 
         if (files && files.length > 0) {
-            profileImage = await aws.uploadFile(files[0]);
+            profileImage = await uploadFile(files[0]);
         }
 
         let hash = bcrypt.hashSync(password, saltRounds);
@@ -134,9 +126,39 @@ const userRegister = async function (req, res) {
     }
 }
 
+//////////////////// loginUser//////////////////////////////////////////////
+   const loginUser = async(req,res) =>{
+       let data = req.body
+       if (!isValidRequestBody(data)) 
+        return res.status(400).send({ status: false, message: "No data provided" });
+        let {email,password} = data
+        if (!isValidData(email)) 
+            return res.status(400).send({ status: false, message: "email is required."});
+            if (!isValidEmail.test(email)) {
+                return res.status(400).send({ status: false, message: "Please enter valid a email " });
+            }
+            let checkEmail = await userModel.findOne({email});
+            if(!checkEmail) res.status(400).send({ status: false, message: `user is not present with this email:-${email}`});
+
+            if (!isValidData(password)) {
+                return res.status(400).send({ status: false, message: "Password is required." });
+            }
+            if (!(password.length >= 8 && password.length <= 15)) {
+                return res.status(400).send({ status: false, message: "Password should be minimum 8 characters and maximum 15 characters", });
+            }
+            let decript = await bcrypt.compare(password,checkEmail.password)
+           if (!decript) return res.status(400).send({ status: false, message: "Password is wrong"});
+            
+           let token = jwt.sign({
+               userId:checkEmail._id,
+               exp: Math.floor(Date.now()/1000) + 60*60*60
+            },"//groupNumber_15||best_coders//")
+            res.status(200).send({status:true,message: "User login successfull",data:{userId:checkEmail._id,token}})
+   }
 
 
-module.exports = { userRegister };
+
+module.exports = { userRegister,loginUser };
 
 
 
