@@ -15,7 +15,7 @@ let isValidEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
 let isValidPhone = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 
-let pincodeValid = !/(^[0-9]{6}(?:\s*,\s*[0-9]{6})*$)/
+let pincodeValid = (/(^[0-9]{6}(?:\s*,\s*[0-9]{6})*$)/)
 
 
 let isValidObjectId = /^[0-9a-fA-F]{24}$/;

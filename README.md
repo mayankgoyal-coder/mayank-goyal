@@ -100,6 +100,7 @@ On error - Return a suitable error message with a valid HTTP status code. The re
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTYyODc2YWJkY2I3MGFmZWVhZjljZjUiLCJpYXQiOjE2MzM4NDczNzYsImV4cCI6MTYzMzg4MzM3Nn0.PgcBPLLg4J01Hyin-zR6BCk7JHBY-RpuWMG_oIK7aV8"
     }
 }
+
 GET /user/:userId/profile (Authentication required)
 Allow an user to fetch details of their profile.
 Make sure that userId in url param and in token is same

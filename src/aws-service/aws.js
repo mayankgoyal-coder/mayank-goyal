@@ -36,4 +36,24 @@ let uploadFile = async (file) => {
 }
 
 
-module.exports = aws;
+module.exports = {uploadFile};
+
+// {
+// "fname": "John",
+// "lname": "Doe",
+// "email": "johndoe@mailinator.com",
+// "phone": 9876543210,
+// "password":"3938475793"
+// "address": {
+//     "shipping": {
+//         "street": "MG Road",
+//         "city": "Indore",
+//         "pincode": 452001
+//     },
+//     "billing": {
+//         "street": "MG Road",
+//         "city": "Indore",
+//         "pincode": 452003
+//     }
+// }
+// }
