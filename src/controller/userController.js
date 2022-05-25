@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { uploadFile } = require("../aws-service/aws");
 const userModel = require("../models/userModel");
-const { isValidData, isValidRequestBody, isValidEmail, isValidPhone, isValidName, pincodeValid, isValidObjectId } = require("../validator/validation");
+const { isValidData, isValidRequestBody, isValidEmail, isValidPhone, pincodeValid, isValidObjectId } = require("../validator/validation");
 const jwt = require('jsonwebtoken')
 
 
@@ -22,16 +22,8 @@ const userRegister = async function (req, res) {
             return res.status(400).send({ status: false, message: "First name is required." });
         }
 
-        if (!isValidName.test(fname)) {
-            return res.status(400).send({ status: false, msg: "Please enter a valid first name" })
-        }
-
         if (!isValidData(lname)) {
             return res.status(400).send({ status: false, message: " Last name is required." });
-        }
-
-        if (!isValidName.test(lname)) {
-            return res.status(400).send({ status: false, msg: "Please enter a valid last name" })
         }
 
         if (!isValidData(email)) {
@@ -218,10 +210,16 @@ const updateUserDetails = async function (req, res) {
         let updateUser = {};
 
         if (fname) {
+            if (!isValidData(fname)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
             updateUser["fname"] = fname;
         }
 
         if (lname) {
+            if (!isValidData(fname)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
             updateUser["lname"] = lname;
         }
 

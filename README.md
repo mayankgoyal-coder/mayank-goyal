@@ -197,20 +197,24 @@ Upload product image to S3 bucket and save image public url in document.
 Response format
 On success - Return HTTP status 201. Also return the product document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 GET /products
+
 Returns all products in the collection that aren't deleted.
 Filters
+
 Size (The key for this filter will be 'size')
 Product name (The key for this filter will be 'name'). You should return all the products with name containing the substring recieved in this filter
 Price : greater than or less than a specific value. The keys are 'priceGreaterThan' and 'priceLessThan'.
 NOTE: For price filter request could contain both or any one of the keys. For example the query in the request could look like { priceGreaterThan: 500, priceLessThan: 2000 } or just { priceLessThan: 1000 } )
-
 Sort
 Sorted by product price in ascending or descending. The key value pair will look like {priceSort : 1} or {priceSort : -1} eg /products?size=XL&name=Nit%20grit
 Response format
 On success - Return HTTP status 200. Also return the product documents. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 GET /products/:productId
+
 Returns product details by product id
 Response format
 On success - Return HTTP status 200. Also return the product documents. The response should be a JSON object like this
