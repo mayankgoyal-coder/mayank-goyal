@@ -203,21 +203,34 @@ const updateUserDetails = async function (req, res) {
         if (!isValidObjectId.test(userId)) {
             return res.status(400).send({ status: false, message: "Invalid user id" })
         }
+        if (!bodyData) {
+            if (!isValidRequestBody(bodyData)) return res.status(400).send({ status: false, message: "No data provided" });
+        }
 
-        if (!isValidRequestBody(bodyData)) return res.status(400).send({ status: false, message: "No data provided" });
 
-        const { email, phone, profileImage, password, address } = bodyData;
+        if (req.userId != userId) {
+            return res.status(401).send({ status: false, message: "You're not Authorized" })
+        }
+
+
+        const { fname, lname, email, phone, profileImage, password, address } = bodyData;
 
         let updateUser = {};
 
         if (fname) {
-            updateUser.fname = fname
+            updateUser["fname"] = fname;
         }
 
         if (lname) {
-            updateUser.lname = lname
+            updateUser["lname"] = lname;
         }
 
+        if (profileImage) {
+            if (files && files.length > 0) {
+                profileImage = await uploadFile(files[0]);
+            }
+            updateUser["profileImage"] = profileImage;
+        }
 
         if (email) {
             if (!isValidEmail.test(email)) {
@@ -228,9 +241,8 @@ const updateUserDetails = async function (req, res) {
             if (duplicateEmail) {
                 return res.status(400).send({ status: false, msg: "Email already exist" });
             }
-            updateUser.email = email;
+            updateUser["email"] = email;
         }
-
 
         if (password) {
             if (!(password.length >= 8 && password.length <= 15)) {
@@ -238,7 +250,7 @@ const updateUserDetails = async function (req, res) {
             }
 
             let hash = bcrypt.hashSync(password, saltRounds);
-            updateUser.password = hash;
+            updateUser["password"] = hash;
         }
 
         if (phone) {
@@ -250,29 +262,48 @@ const updateUserDetails = async function (req, res) {
             if (duplicatePhone) {
                 return res.status(400).send({ status: false, msg: "Phone number already exist" });
             }
-            updateUser.phone = phone;
+            updateUser["phone"] = phone;
         }
 
-        if (address.shipping.pincode) {
-            if (!pincodeValid.test(address.shipping.pincode)) {
-                return res.status(400).send({ status: false, message: "Shipping pincode is incorrect." });
+        if (address) {
+            if (address.shipping) {
+                if (address.shipping.street) {
+                    updateUser['address.shipping.street'] = address.shipping.street
+                }
+
+                if (address.shipping.city) {
+                    updateUser['address.shipping.city'] = address.shipping.city
+                }
+
+                if (address.shipping.pincode) {
+                    if (!pincodeValid.test(address.shipping.pincode)) {
+                        return res.status(400).send({ status: false, message: "Shipping pincode is incorrect." });
+                    }
+                    updateUser['address.shipping.pincode'] = address.shipping.pincode;
+                }
             }
-            updateUser.address.shipping.pincode = address.shipping.pincode;
-        }
 
-        if (address.billing.pincode) {
-            if (!pincodeValid.test(address.billing.pincode)) {
-                return res.status(400).send({ status: false, message: "Billing pincode is incorrect." });
+            if (address.billing) {
+                if (address.billing.street) {
+                    updateUser['address.billing.street'] = address.billing.street
+                }
+
+                if (address.billing.city) {
+                    updateUser['address.billing.city'] = address.billing.city
+                }
+
+                if (address.billing.pincode) {
+                    if (!pincodeValid.test(address.billing.pincode)) {
+                        return res.status(400).send({ status: false, message: "Billing pincode is incorrect." });
+                    }
+                    updateUser['address.billing.pincode'] = address.billing.pincode;
+                }
             }
-            updateUser.address.billing.pincode = address.billing.pincode;
         }
 
+        let result = await userModel.findByIdAndUpdate(userId, updateUser, { new: true });
 
-
-
-
-
-
+        res.status(200).send({ status: true, message: "User profile update", data: result });
 
     } catch (error) {
         res.status(500).send({ status: false, message: error.message });

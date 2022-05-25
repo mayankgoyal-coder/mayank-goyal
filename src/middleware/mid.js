@@ -11,9 +11,6 @@ const authentication = async function (req, res, next) {
         };
 
         let token = bearToken.split(" ")[1];
-        console.log(token)
-
-        console.log(bearToken)
 
         let decodedToken = jwt.verify(token, "//groupNumber_15||best_coders//");
 
@@ -28,4 +25,4 @@ const authentication = async function (req, res, next) {
 
 
 
-module.exports = {authentication}
+module.exports = { authentication }
