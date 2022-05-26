@@ -66,6 +66,59 @@ const createProducts = async (req, res) => {
     }
 }
 
+/////////////////////////////////////////////////////////////////
+let getProduct = async function (req, res) {
+    try {
+        let data = req.query;
+        const filterquery = { isDeleted: false };
+        const { name, size, priceGreaterThan, priceLessThan } = data;
+
+        if (name) {
+            if (!isValidData(name)) return res.status(400).send({ status: false, message: "provide a name" });
+            filterquery.title = name.trim();
+        }
+
+        if (size) {
+            if (!isValidData(size)) return res.status(400).send({ status: false, message: "provide size" });
+            filterquery.availableSizes = size.trim();
+        }
+
+        if (priceGreaterThan) {
+            if (!isValidData(priceGreaterThan)) return res.status(400).send({ status: false, message: "provide price" });
+            filterquery.price = { $gt: priceGreaterThan }
+        }
+
+        if (priceLessThan) {
+            if (!isValidData(priceLessThan)) return res.status(400).send({ status: false, message: "provide price" });
+            filterquery.price = { $lt: priceLessThan }
+        }
+
+        let searchProducts;
+
+        if (priceGreaterThan) {
+
+            searchProducts = await productModel.find(filterquery).sort({ price: 1 })
+            return res.status(200).send({ status: true, msg: "price,higher to lower", data: searchProducts })
+
+        }
+
+        if (priceLessThan) {
+            searchProducts = await productModel.find(filterquery).sort({ price: -1 })
+            return res.status(200).send({ status: true, msg: "price lower to higher", data: searchProducts })
+        }
+
+        let result = await productModel.find(filterquery)
+
+        if (result.length === 0) {
+            return res.status(404).send({ status: false, msg: "No product found" });
+        }
+        
+        res.status(200).send({ status: true, msg: "sucess", data: result });
+    } catch (err) {
+        res.status(500).send({ status: false, error: err.message });
+    }
+};
+
 
 
 

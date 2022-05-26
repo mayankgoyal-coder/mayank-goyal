@@ -20,7 +20,7 @@ let pincodeValid = (/(^[0-9]{6}(?:\s*,\s*[0-9]{6})*$)/)
 let isValidObjectId = (/^[0-9a-fA-F]{24}$/);
 
 let isValidEnum = (enm) =>{
-        return ["S", "XS","M","X", "L","XXL", "XL"].indexOf(enm) !== -1
+        return ["S","XS","M","X","L","XXL","XL"].includes(enm) // "XL,L,XM"    "XL","L"
 }
 
 
