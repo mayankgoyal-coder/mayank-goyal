@@ -34,26 +34,3 @@ let uploadFile = async (file) => {
 
 module.exports = {uploadFile};
 
-<<<<<<< HEAD
-// {
-// "fname": "John",
-// "lname": "Doe",
-// "email": "johndoe@mailinator.com",
-// "phone": 9876543210,
-// "password":"3938475793"
-// "address": {
-//     "shipping": {
-//         "street": "MG Road",
-//         "city": "Indore",
-//         "pincode": 452001
-//     },
-//     "billing": {
-//         "street": "MG Road",
-//         "city": "Indore",
-//         "pincode": 452003
-//     }
-// }
-// }
-=======
-
->>>>>>> 2798e4a797a32693a486b2c9f89d73524a42d60d
