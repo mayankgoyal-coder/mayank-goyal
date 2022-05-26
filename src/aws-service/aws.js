@@ -28,16 +28,13 @@ let uploadFile = async (file) => {
             return resolve(data.Location)
         })
 
-        // let data= await s3.upload( uploadParams)
-        // if( data) return data.Location
-        // else return "there is an error"
-
     })
 }
 
 
 module.exports = {uploadFile};
 
+<<<<<<< HEAD
 // {
 // "fname": "John",
 // "lname": "Doe",
@@ -57,3 +54,6 @@ module.exports = {uploadFile};
 //     }
 // }
 // }
+=======
+
+>>>>>>> 2798e4a797a32693a486b2c9f89d73524a42d60d
