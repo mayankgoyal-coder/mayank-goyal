@@ -205,7 +205,9 @@ Returns all products in the collection that aren't deleted.
 Filters
 
 Size (The key for this filter will be 'size')
+
 Product name (The key for this filter will be 'name'). You should return all the products with name containing the substring recieved in this filter
+
 Price : greater than or less than a specific value. The keys are 'priceGreaterThan' and 'priceLessThan'.
 NOTE: For price filter request could contain both or any one of the keys. For example the query in the request could look like { priceGreaterThan: 500, priceLessThan: 2000 } or just { priceLessThan: 1000 } )
 Sort
@@ -220,18 +222,25 @@ Returns product details by product id
 Response format
 On success - Return HTTP status 200. Also return the product documents. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 PUT /products/:productId
+
 Updates a product by changing at least one or all fields
 Check if the productId exists (must have isDeleted false and is present in collection). If it doesn't, return an HTTP status 404 with a response body like this
 Response format
 On success - Return HTTP status 200. Also return the updated product document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 DELETE /products/:productId
+
 Deletes a product by product id if it's not already deleted
 Response format
 On success - Return HTTP status 200. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
+
 FEATURE III - Cart
+
 Models
 Cart Model
 {
@@ -245,8 +254,11 @@ Cart Model
   createdAt: {timestamp},
   updatedAt: {timestamp},
 }
+
 Cart APIs (authentication required as authorization header - bearer token)
+
 POST /users/:userId/cart (Add to cart)
+
 Create a cart for the user if it does not exist. Else add product(s) in cart.
 Get cart id in request body.
 Get productId in request body.
@@ -273,6 +285,7 @@ Check if the productId exists and is not deleted before updating the cart.
 Response format
 On success - Return HTTP status 200. Also return the updated cart document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 GET /users/:userId/cart
 Returns cart summary of the user.
 Make sure that cart exist.

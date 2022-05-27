@@ -202,6 +202,7 @@ const updateUserDetails = async function (req, res) {
     try {
 
         let userId = req.params.userId;
+
         let bodyData = req.body;
 
         if (!isValidObjectId.test(userId)) {

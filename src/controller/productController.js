@@ -67,15 +67,19 @@ const createProducts = async (req, res) => {
 }
 
 /////////////////////////////////////////////////////////////////
-let getProduct = async function (req, res) {
+const getProductByFilter = async function (req, res) {
     try {
         let data = req.query;
+
         const filterquery = { isDeleted: false };
+
         const { name, size, priceGreaterThan, priceLessThan } = data;
 
         if (name) {
             if (!isValidData(name)) return res.status(400).send({ status: false, message: "provide a name" });
-            filterquery.title = name.trim();
+
+            const regexName = new RegExp(name, "i");
+            filterquery.title = { $regex: regexName };
         }
 
         if (size) {
@@ -112,7 +116,7 @@ let getProduct = async function (req, res) {
         if (result.length === 0) {
             return res.status(404).send({ status: false, msg: "No product found" });
         }
-        
+
         res.status(200).send({ status: true, msg: "sucess", data: result });
     } catch (err) {
         res.status(500).send({ status: false, error: err.message });
@@ -120,10 +124,173 @@ let getProduct = async function (req, res) {
 };
 
 
+const getProductByProductId = async (req, res) => {
+    try {
+        let productId = req.params.productId;
+
+        if (!isValidObjectId.test(productId)) {
+            return res.status(400).send({ status: false, message: "Enter valid Product ID." })
+        }
+
+        let findProductId = await productModel.findById({ _id: productId });
+        res.status(200).send({ status: true, message: "Product Details", data: findProductId })
+
+
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message });
+    }
+}
+
+
+const updateProductById = async (req, res) => {
+    try {
+
+        let productId = req.params.productId;
+
+        let productData = req.body;
+
+        if (!isValidObjectId.test(productId)) {
+            return res.status(400).send({ status: false, message: "Invalid product id" })
+        }
+
+        if (productData) {
+            if (!isValidRequestBody(productData)) return res.status(400).send({ status: false, message: "No data provided" });
+        }
+
+        let existProductId = await productModel.findById({ _id: productId })
+        if (!existProductId) {
+            return res.status(404).send({ status: false, message: "Product Id dosen't exists." });
+        }
+
+        if (existProductId.isDeleted === true) {
+            return res.status(400).send({ status: false, message: "Product is deleted." });
+        }
+
+        const { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments, productImage } = productData;
+
+        let updateProduct = { isDeleted: false };
+
+        if (title) {
+            if (!isValidData(title)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+
+            let existTitle = await productModel.findOne({ title });
+            if (existTitle) {
+                return res.status(400).send({ status: false, message: "Title already exists" });
+            }
+
+            updateProduct["title"] = title;
+        }
+
+        if (description) {
+            if (!isValidData(description)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["description"] = description;
+        }
+
+        if (price) {
+            if (!isValidData(price)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["price"] = price;
+        }
+
+        if (currencyId) {
+            if (!isValidData(currencyId)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["currencyId"] = currencyId;
+        }
+
+        if (currencyFormat) {
+            if (!isValidData(currencyFormat)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["currencyFormat"] = currencyFormat;
+        }
+
+        if (isFreeShipping) {
+            if (!isValidData(isFreeShipping)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["isFreeShipping"] = isFreeShipping;
+        }
+
+        if (style) {
+            if (!isValidData(style)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+            updateProduct["style"] = style;
+        }
+
+        if (availableSizes) {
+            if (!isValidData(availableSizes)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+
+            updateProduct["availableSizes"] = availableSizes;
+        }
+        if (installments) {
+            if (!isValidData(installments)) {
+                return res.status(400).send({ status: false, message: "Enter some data" });
+            }
+
+            updateProduct["availableSizes"] = installments;
+        }
+
+        if (productImage) {
+            if (files && files.length > 0) {
+                productUrl = await uploadFile(files[0]);
+            }
+            productData["productImage"] = productUrl;
+        }
+
+
+        let result = await productModel.findByIdAndUpdate(productId, updateProduct, { new: true });
+
+        res.status(200).send({ status: true, message: "Product Update Successfully", data: result });
+
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message });
+
+    }
+}
+
+
+const deleteProductById = async (req, res) => {
+    try {
+
+        let productId = req.params.productId;
+
+        if (!isValidObjectId.test(productId)) {
+            return res.status(400).send({ status: false, message: "Invalid product id" })
+        }
+
+        let existProductId = await productModel.findById({ _id: productId })
+        if (!existProductId) {
+            return res.status(404).send({ status: false, message: "Product Id dosen't exists." });
+        }
+
+        if (existProductId.isDeleted === true) {
+            return res.status(400).send({ status: false, message: "Product already deleted." });
+        }
+
+        let deleteProduct = await productModel.findByIdAndUpdate(productId, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true });
+
+        res.status(200).send({ status: true, message: "Product Successfully Deleted.", data: deleteProduct })
+
+
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message });
+    }
+}
 
 
 
 
 
 
-module.exports = { createProducts }
+
+module.exports = { createProducts, getProductByFilter, getProductByProductId, updateProductById, deleteProductById }
