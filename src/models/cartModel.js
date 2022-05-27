@@ -3,30 +3,34 @@ let ObjectId = mongoose.Schema.Types.ObjectId;
 
 let cartSchema = new mongoose.Schema({
 
-    userid: {
+    userId: {
         type: ObjectId,
         ref: "User",
         required: true,
         unique: true
     },
+
     items: [
         {
             productId: {
                 type: ObjectId,
-                ref: "User",
+                ref: "Product",
                 required: true,
             },
             quantity: {
                 type: Number,
                 required: true,
                 min: 1
-            }
+            },
+            _id: false
         }
     ],
+
     totalPrice: {
         type: Number,
         required: true,
     },
+
     totalItems: {
         type: Number,
         required: true,
