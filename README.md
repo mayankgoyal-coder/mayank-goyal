@@ -215,6 +215,8 @@ Deletes a product by product id if it's not already deleted
 Response format
 On success - Return HTTP status 200. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
+
 FEATURE III - Cart
 Models
 Cart Model
@@ -229,6 +231,7 @@ Cart Model
   createdAt: {timestamp},
   updatedAt: {timestamp},
 }
+
 Cart APIs (authentication required as authorization header - bearer token)
 
 POST /users/:userId/cart (Add to cart)
