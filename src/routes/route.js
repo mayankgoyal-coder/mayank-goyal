@@ -7,7 +7,7 @@ const { userRegister, loginUser, getUser, updateUserDetails } = require("../cont
 const { createProducts, getProductByFilter, getProductByProductId, updateProductById, deleteProductById } = require("../controller/productController");
 const { authentication } = require("../middleware/mid");
 
-const {createCart} = require("../controller/cartController")
+const {createCart,updateCart,getCart,deleteCart} = require("../controller/cartController")
 
 
 // FEATURE I - User 
@@ -29,6 +29,9 @@ router.delete("/products/:productId", deleteProductById);
 // Feature III - Cart
 
 router.post("/users/:userId/cart", createCart)
+router.put("/users/:userId/cart", updateCart)
+router.get("/users/:userId/cart", getCart)
+router.delete("/users/:userId/cart", deleteCart)
 
 
 
