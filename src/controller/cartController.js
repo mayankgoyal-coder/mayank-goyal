@@ -4,10 +4,14 @@ const productModel = require("../models/productModel")
 
 
 
+console.log(a);
+var a = 10;
+
+
+
 const createCart = async (req, res) => {
     try {
         let userId = req.params.userId;
-
 
         let cartData = req.body;
 
@@ -40,9 +44,9 @@ const createCart = async (req, res) => {
                     items: items,
                     userId: userId
                 }
-
+                
                 let createCart = await cartModel.create(newProduct);
-                res.status(201).send({ status: true, message: "Cart Created", data: createCart })
+                res.status(201).send({ status: true, message: "Cart Created", data: createCart });
             }
         }
 

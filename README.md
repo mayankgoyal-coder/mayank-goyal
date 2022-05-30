@@ -230,7 +230,9 @@ Cart Model
   updatedAt: {timestamp},
 }
 Cart APIs (authentication required as authorization header - bearer token)
+
 POST /users/:userId/cart (Add to cart)
+
 Create a cart for the user if it does not exist. Else add product(s) in cart.
 Get cart id in request body.
 Get productId in request body.
@@ -243,7 +245,10 @@ Get product(s) details in response body.
 Response format
 On success - Return HTTP status 201. Also return the cart document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
+
 PUT /users/:userId/cart (Remove product / Reduce a product's quantity from the cart)
+
 Updates a cart by either decrementing the quantity of a product by 1 or deleting a product from the cart.
 Get cart id in request body.
 Get productId in request body.
@@ -257,6 +262,7 @@ Check if the productId exists and is not deleted before updating the cart.
 Response format
 On success - Return HTTP status 200. Also return the updated cart document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 GET /users/:userId/cart
 Returns cart summary of the user.
 Make sure that cart exist.
@@ -266,6 +272,7 @@ Get product(s) details in response body.
 Response format
 On success - Return HTTP status 200. Return the cart document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 DELETE /users/:userId/cart
 Deletes the cart for the user.
 Make sure that cart exist.
@@ -275,8 +282,11 @@ cart deleting means array of items is empty, totalItems is 0, totalPrice is 0.
 Response format
 On success - Return HTTP status 204. Return a suitable message. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
+
 FEATURE IV - Order
 Models
+
 Order Model
 {
   userId: {ObjectId, refs to User, mandatory},
@@ -294,7 +304,9 @@ Order Model
   createdAt: {timestamp},
   updatedAt: {timestamp},
 }
+
 Checkout/Order APIs (Authentication and authorization required)
+
 POST /users/:userId/orders
 Create an order for the user
 Make sure the userId in params and in JWT token match.
@@ -303,6 +315,7 @@ Get cart details in the request body
 Response format
 On success - Return HTTP status 200. Also return the order document. The response should be a JSON object like this
 On error - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
+
 PUT /users/:userId/orders
 Updates an order status
 Make sure the userId in params and in JWT token match.
