@@ -1,8 +1,8 @@
 
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const { uploadFile } = require("../aws-service/aws")
+const { uploadFile } = require("../aws-service/aws");
 
 const { json } = require("body-parser");
 

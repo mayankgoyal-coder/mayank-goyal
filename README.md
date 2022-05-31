@@ -322,6 +322,7 @@ Send [form-data](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 ### Models
 - Order Model
 ```yaml
+
 {
   userId: {ObjectId, refs to User, mandatory},
   items: [{
@@ -338,9 +339,8 @@ Send [form-data](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
   createdAt: {timestamp},
   updatedAt: {timestamp},
 }
+
 ```
-
-
 ## Checkout/Order APIs (Authentication and authorization required)
 ### POST /users/:userId/orders
 - Create an order for the user
@@ -375,6 +375,8 @@ Refer below sample
 
 ### Successful Response structure
 ```yaml
+
+
 {
   status: true,
   message: 'Success',
@@ -382,9 +384,11 @@ Refer below sample
 
   }
 }
+
 ```
 ### Error Response structure
 ```yaml
+
 {
   status: false,
   message: ""
@@ -394,6 +398,12 @@ Refer below sample
 ## Collections
 ## users
 ```yaml
+
+
+Collections
+
+users
+
 {
   _id: ObjectId("88abc190ef0288abc190ef02"),
   fname: 'John',
@@ -478,4 +488,4 @@ Refer below sample
   createdAt: "2021-09-17T04:25:07.803Z",
   updatedAt: "2021-09-17T04:25:07.803Z",
 }
-```
+
