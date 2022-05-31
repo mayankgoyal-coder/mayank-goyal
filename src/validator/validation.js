@@ -20,10 +20,9 @@ let pincodeValid = (/(^[0-9]{6}(?:\s*,\s*[0-9]{6})*$)/)
 let isValidObjectId = (/^[0-9a-fA-F]{24}$/);
 
 let isValidEnum = (enm) =>{
-        return ["S","XS","M","X","L","XXL","XL"].includes(enm) // "XL,L,XM"    "XL","L"
+    var uniqueEnums = [...new Set(enm)];
+    const enumList = ["S", "XS", "M", "X", "L", "XXL", "XL"];
+    return enm.length === uniqueEnums.length && enm.every(e => enumList.includes(e));
 }
-
-
-
 
 module.exports = { isValidData, isValidRequestBody, isValidEmail, isValidPhone, isValidObjectId,pincodeValid,isValidPrice,isValidEnum }
