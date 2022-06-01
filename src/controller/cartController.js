@@ -35,11 +35,13 @@ const createCart = async (req, res) => {
             if (!isValidObjectId.test(productId)) {
                 return res.status(400).send({ status: false, message: "Invalid productid" });
             }
+
             let findProductId = await productModel.findById({ _id: productId });
             if (!findProductId) {
                 return res.status(404).send({ status: false, message: "product doesn't exists" });
             }
         }
+
         if (!findCartId) {
             if (!items) {
                 let newCart = {
@@ -61,7 +63,7 @@ const createCart = async (req, res) => {
 
                 let newProduct = {
                     totalPrice: items[0].quantity * findProduct.price,
-                    totalItems: items[0].quantity,
+                    totalItems: items.length,
                     items: items,
                     userId: userId,
                 };
@@ -83,7 +85,7 @@ const createCart = async (req, res) => {
                     $push: { items: items },
                     $inc: {
                         totalPrice: items[0].quantity * findProduct.price,
-                        totalItems: items[0].quantity,
+                        totalItems: items.length,
                     },
                 },
                 { new: true }
@@ -164,7 +166,7 @@ const updateCart = async (req, res) => {
                             $pull: { items: { productId: productId } },
                             $inc: {
                                 totalPrice: -findproductId.price,
-                                totalItems: -findCartId.items[i].quantity,
+                                totalItems: -findCartId.items.length,
                             },
                         },
                         { new: true }

@@ -31,11 +31,13 @@ const orderSchema = new mongoose.Schema({
     totalItems: {
         type: Number,
         required: true,
+        trim: true
     },
 
     totalQuantity: {
         type: Number,
-        required: true
+        required: true,
+        trim: true
     },
 
     cancellable: {

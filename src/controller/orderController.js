@@ -1,6 +1,7 @@
 const orderModel = require('../models/orderModel');
 const userModel = require("../models/userModel");
 const productModel = require("../models/productModel");
+const cartModel = require("../models/cartModel");
 
 const { isValidData, isValidRequestBody, isValidObjectId, isValidPrice, isValidEnum, } = require("../validator/validation");
 
@@ -18,9 +19,14 @@ const createOrder = async (req, res) => {
             return res.status(404).send({ status: false, message: "User doesn't exists" });
         };
 
-        let orderData = req.body;
-        
+        const orderData = req.body
 
+        const { cartId, totalItems, totalQuantity, totalPrice, cancellable, status } = orderData;
+
+        let findCartDetails = await cartModel.findById(cartId);
+
+        totalItems = findCartDetails.totalItems
+        totalQuantity
 
 
 
