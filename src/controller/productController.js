@@ -5,7 +5,7 @@ const { isValidData, isValidRequestBody, isValidObjectId, isValidPrice, isValidE
 const createProducts = async (req, res) => {
     try {
 
-        let data = req.body
+        let data = req.body;
 
         if (!isValidRequestBody(data)) {
             return res.status(400).send({ status: false, message: "No data provided" });

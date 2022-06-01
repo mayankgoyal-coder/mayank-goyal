@@ -5,10 +5,12 @@ const router = express.Router();
 const { userRegister, loginUser, getUser, updateUserDetails } = require("../controller/userController");
 
 const { createProducts, getProductByFilter, getProductByProductId, updateProductById, deleteProductById } = require("../controller/productController");
+
+const { createCart, updateCart, getCart, deleteCart } = require("../controller/cartController");
+
+const { createOrder } = require("../controller/orderController")
+
 const { authentication } = require("../middleware/mid");
-
-const { createCart, updateCart, getCart, deleteCart } = require("../controller/cartController")
-
 
 // FEATURE I - User 
 // User API
@@ -35,7 +37,7 @@ router.delete("/users/:userId/cart", authentication, deleteCart)
 
 // Feature IV - Cart
 
-
+router.post("/users/:userId/orders", createOrder)
 
 
 module.exports = router;
