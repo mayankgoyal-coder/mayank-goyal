@@ -10,10 +10,9 @@ const saltRounds = 10;
 
 const userModel = require("../models/userModel");
 
-const { isValidData, isValidRequestBody, isValidEmail, isValidPhone, isValidName, pincodeValid, isValidObjectId } = require("../validator/validation");
+const { isValidData, isValidRequestBody, isValidEmail, isValidPhone, pincodeValid, isValidObjectId } = require("../validator/validation");
 
 //********************< Create User Starts >*********************//
-
 
 const userRegister = async function (req, res) {
     try {
@@ -70,7 +69,7 @@ const userRegister = async function (req, res) {
         }
 
         // hashing password
-        bodyData.password = await bcrypt.hash(password, saltRounds);
+        requestBody.password = await bcrypt.hash(password, saltRounds);
 
         // validation for address of shipping
         if (!isValidData(address.shipping.street)) return res.status(400).send({ status: false, message: "Shipping street is required." });
@@ -84,8 +83,6 @@ const userRegister = async function (req, res) {
         if (!isValidData(address.billing.pincode)) return res.status(400).send({ status: false, message: "Billing pincode is required." });
         if (!pincodeValid.test(address.billing.pincode)) return res.status(400).send({ status: false, message: "Billing pincode is incorrect." });
 
-        // Add profileImage
-        bodyData.profileImage = uploadedFileURL;
 
         if (!isValidData(address.billing.street)) {
             return res.status(400).send({ status: false, message: "Billing street is required." });
@@ -112,6 +109,9 @@ const userRegister = async function (req, res) {
         if (files && files.length > 0) {
             profileImage = await uploadFile(files[0]);
         }
+
+        // Add profileImage
+        requestBody.profileImage = profileImage;
 
         let hash = bcrypt.hashSync(password, saltRounds);
 
@@ -148,7 +148,7 @@ const loginUser = async (req, res) => {
         }
 
         let checkEmail = await userModel.findOne({ email });
-        if (!checkEmail) res.status(400).send({ status: false, message: `user is not present with this email:-${email}` });
+        if (!checkEmail) return res.status(404).send({ status: false, message: `User is not present with this email:-${email}` });
 
         if (!isValidData(password)) {
             return res.status(400).send({ status: false, message: "Password is required." });
@@ -185,6 +185,11 @@ const getUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Invalid user id" })
         }
 
+        // Authorization
+        if (req.userId != userId) {
+            return res.status(401).send({ status: false, message: "You're not authorized" })
+        }
+
         let findUserId = await userModel.findById({ _id: userId });
         if (!findUserId) {
             return res.status(404).send({ status: false, message: "User doesn't exists" })
@@ -208,15 +213,14 @@ const updateUserDetails = async function (req, res) {
         if (!isValidObjectId.test(userId)) {
             return res.status(400).send({ status: false, message: "Invalid user id" })
         }
-        if (!bodyData) {
-            if (!isValidRequestBody(bodyData)) return res.status(400).send({ status: false, message: "No data provided" });
-        }
+
+        if (!isValidRequestBody(bodyData)) return res.status(400).send({ status: false, message: "No data provided" });
 
 
+        // Authorization
         if (req.userId != userId) {
             return res.status(401).send({ status: false, message: "You're not Authorized" })
         }
-
 
         const { fname, lname, email, phone, profileImage, password, address } = bodyData;
 

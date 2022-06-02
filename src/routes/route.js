@@ -8,7 +8,7 @@ const { createProducts, getProductByFilter, getProductByProductId, updateProduct
 
 const { createCart, updateCart, getCart, deleteCart } = require("../controller/cartController");
 
-const { createOrder } = require("../controller/orderController")
+const { createOrder, updateOrder } = require("../controller/orderController")
 
 const { authentication } = require("../middleware/mid");
 
@@ -37,7 +37,9 @@ router.delete("/users/:userId/cart", authentication, deleteCart)
 
 // Feature IV - Cart
 
-router.post("/users/:userId/orders", createOrder)
+router.post("/users/:userId/orders", createOrder);
+router.put("/users/:userId/orders", updateOrder);
 
 
 module.exports = router;
+

@@ -1,4 +1,5 @@
-const productModel = require('../models/productModel')
+
+const productModel = require('../models/productModel');
 const { uploadFile } = require("../aws-service/aws");
 const { isValidData, isValidRequestBody, isValidObjectId, isValidPrice, isValidEnum } = require("../validator/validation");
 
@@ -51,7 +52,7 @@ const createProducts = async (req, res) => {
             return res.status(400).send({ status: false, message: "avilableSizes is required" })
 
         const availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
-        
+
         if (!isValidEnum(availSizes))
             return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL` })
 
@@ -59,7 +60,7 @@ const createProducts = async (req, res) => {
             if (isNaN(installments)) return res.status(400).send({ status: false, message: "installments should be number only" })
         }
 
-        const newData= { ...data, availableSizes: availSizes};
+        const newData = { ...data, availableSizes: availSizes };
 
         let createdproduct = await productModel.create(newData)
         res.status(201).send({ satus: true, message: "product create successfully", data: createdproduct })
@@ -88,19 +89,19 @@ const getProductByFilter = async function (req, res) {
 
         if (size) {
             if (!isValidData(size)) return res.status(400).send({ status: false, message: "provide size" });
-            
+
             const availSizes = size.split(',').map(s => s.trim().toUpperCase())
             filterquery.availableSizes = { $all: availSizes };
         }
-        
 
-        if (priceGreaterThan && !isValidData(priceGreaterThan)) 
-                return res.status(400).send({ status: false, message: "provide price" });
 
-        if (!priceLessThan && isValidData(priceLessThan)) 
+        if (priceGreaterThan && !isValidData(priceGreaterThan))
             return res.status(400).send({ status: false, message: "provide price" });
 
-        
+        if (!priceLessThan && isValidData(priceLessThan))
+            return res.status(400).send({ status: false, message: "provide price" });
+
+
         if (priceGreaterThan && priceLessThan) {
             filterquery.price = { $gte: priceGreaterThan, $lte: priceLessThan }
         }
@@ -147,6 +148,15 @@ const getProductByProductId = async (req, res) => {
         }
 
         let findProductId = await productModel.findById({ _id: productId });
+
+        if (!findProductId) {
+            return res.status(404).send({ status: false, message: "Product Id doesn't exists" })
+        }
+
+        if (findProductId.isDeleted == true) {
+            return res.status(400).send({ status: false, message: "Product is already deleted." })
+        }
+
         res.status(200).send({ status: true, message: "Product Details", data: findProductId })
 
 
@@ -244,8 +254,14 @@ const updateProductById = async (req, res) => {
                 return res.status(400).send({ status: false, message: "Enter some data" });
             }
 
-            updateProduct["availableSizes"] = availableSizes;
+            const availSizes = availableSizes.split(',').map(s => s.trim().toUpperCase())
+
+            if (!isValidEnum(availSizes))
+                return res.status(400).send({ status: false, message: `only allow S, XS, M, X, L, XXL, XL` })
+
+            updateProduct["availableSizes"] = availSizes;
         }
+        
         if (installments) {
             if (!isValidData(installments)) {
                 return res.status(400).send({ status: false, message: "Enter some data" });
