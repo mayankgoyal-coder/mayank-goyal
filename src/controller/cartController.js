@@ -42,13 +42,14 @@ const createCart = async (req, res) => {
             }
 
             let findProductId = await productModel.findById({ _id: productId });
-            console.log(findproductId)
+            
             if (!findProductId) {
                 return res.status(404).send({ status: false, message: "product doesn't exists" });
             }
         }
 
         if (!findCartId) {
+            if ((!items[0].quantity) || items[0].quantity == 0) items[0].quantity = 1
             if (!items) {
                 let newCart = {
                     items: [],
@@ -217,7 +218,7 @@ const updateCart = async (req, res) => {
 
                         //    console.log(removeProduct)
                         let updateCart = await cartModel.findByIdAndUpdate(cartId, {
-                            $set: { items: findCartId.items }, $inc: { totalPrice: -findproductId.price, totalItems: -1 }
+                            $set: { items: findCartId.items }, $inc: { totalPrice: -findproductId.price}
                         }, { new: true }
                         );
                         res.status(200).send({
@@ -227,7 +228,8 @@ const updateCart = async (req, res) => {
                         });
                         flag = 1;
                         break;
-                    } else {
+                    }
+                    if (findCartId.items[i].quantity == 1){
                         let updateCart = await cartModel.findByIdAndUpdate(cartId, {
                             $pull: { items: { productId: productId } },
                             $inc: { totalPrice: -findproductId.price, totalItems: -findCartId.items[i].quantity }
@@ -265,7 +267,7 @@ const getCart = async (req, res) => {
             return res.status(401).send({ status: false, message: "You're not Authorized" })
         }
 
-        let findCartId = await cartModel.findOne({ userId: userId });
+        let findCartId = await cartModel.findOne({ userId: userId })
         if (!findCartId) {
             return res.status(404).send({ status: false, message: "cart is not created for this user" })
         }

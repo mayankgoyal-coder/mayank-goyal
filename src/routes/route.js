@@ -35,10 +35,10 @@ router.put("/users/:userId/cart", authentication, updateCart)
 router.get("/users/:userId/cart", authentication, getCart)
 router.delete("/users/:userId/cart", authentication, deleteCart)
 
-// Feature IV - Cart
+// Feature IV - order
 
-router.post("/users/:userId/orders", createOrder);
-router.put("/users/:userId/orders", updateOrder);
+router.post("/users/:userId/orders",authentication, createOrder);
+router.put("/users/:userId/orders", authentication,updateOrder);
 
 
 module.exports = router;
