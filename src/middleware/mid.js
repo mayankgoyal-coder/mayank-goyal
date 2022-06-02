@@ -5,7 +5,7 @@ const authentication = async function (req, res, next) {
     try {
 
         let bearToken = req.headers["authorization"];
-        if (!bearToken) token = req.headers["Authorization"]
+        if (!bearToken) bearToken = req.headers["Authorization"]
         if (!bearToken) {
             return res.status(400).send({ status: false, message: "Token not present, login again " })
         };
