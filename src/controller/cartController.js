@@ -184,13 +184,14 @@ const updateCart = async (req, res) => {
             let flag = 0;
             for (let i = 0; i < findCartId.items.length; i++) {
                 if (findCartId.items[i].productId == productId) {
+                     let quatityValue = findCartId.items[i].quantity
                     //    console.log(removeProduct)
                     let updateCart = await cartModel.findByIdAndUpdate(
                         cartId,
                         {
                             $pull: { items: { productId: productId } },
                             $inc: {
-                                totalPrice: -findproductId.price,
+                                totalPrice: -findproductId.price * quatityValue,
                                 totalItems: -1,
                             },
                         },
