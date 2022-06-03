@@ -97,10 +97,10 @@ const updateOrder = async (req, res) => {
       return res.status(404).send({ status: false, message: "User doesn't exists" });
     }
 
-    // // Authentice and Authorized
-    // if (req.userId != userId) {
-    //   return res.status(401).send({ status: false, message: "You're not Authorized" });
-    // }
+    // Authentice and Authorized
+    if (req.userId != userId) {
+      return res.status(401).send({ status: false, message: "You're not Authorized" });
+    }
 
     let orderId = req.body.orderId;
 
